@@ -12,7 +12,7 @@
   "license": "ISC",
   "lint-staged": {
     "*.ts": [
-      "./node_modules/.bin/prettier --write",
+      "./node_modules/.bin/prettier --write index.ts jobs.ts",
       "git add"
     ]
   },
