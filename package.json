@@ -10,10 +10,11 @@
   "author": "",
   "license": "ISC",
   "precommit": "lint-staged",
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "dependencies": {
     "@types/axios": "^0.14.0",
