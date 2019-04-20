@@ -13,7 +13,7 @@ const jobs$ = new Jobs().getJobs(
 jobs$
   .pipe(concatMap((job: Job) => new Jobs().createJob(job)))
   .subscribe((response: AxiosResponse) => {
-    console.log('Res', response.statusText);
+    // console.log('Res', response.statusText);
   });
 
 cron.schedule('* * * * *', () => {
