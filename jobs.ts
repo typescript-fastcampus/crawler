@@ -9,7 +9,7 @@ export enum JobPlatformEndPoint {
   Programmers = 'https://programmers.co.kr/job',
 }
 
-interface Job {
+export interface Job {
   companyName: string;
   title: string;
   position: string;
@@ -20,11 +20,11 @@ interface Job {
 }
 
 export class Jobs {
-  private endPoint: string = 'https://e88a998f.ngrok.io';
+  private endPoint: string = 'http://localhost:3000';
   public getJobs(
     platformEndPoint: JobPlatformEndPoint = JobPlatformEndPoint.RocketPunch,
     searchKeyword: string
-  ): Observable<any> {
+  ): Observable<Job> {
     switch (platformEndPoint) {
       case JobPlatformEndPoint.RocketPunch:
         return this.parseJobFromRocketPunch(searchKeyword);
@@ -37,7 +37,7 @@ export class Jobs {
     }
   }
 
-  public parseJobFromRocketPunch(keyword: string): Observable<any> {
+  public parseJobFromRocketPunch(keyword: string): Observable<Job> {
     return this.getPageRangeFromRocketPunch(keyword).pipe(
       concatMap((pageRange: [number, number]) => {
         const pages = [];
@@ -64,7 +64,8 @@ export class Jobs {
           position: $('#wrap > div.four.wide.job-infoset.column > div > div:nth-child(3) > div > div:nth-child(1) > div.content').text().replace(/\n|\s|\r/g, ""),
           annualSalary: $('#wrap > div.four.wide.job-infoset.column > div > div:nth-child(3) > div > div:nth-child(5) > div.content').text().replace(/\n|\s|\r/g, ""),
           region: $('#wrap > div.four.wide.job-infoset.column > div > div:nth-child(3) > div > div:nth-child(2) > div.content').text().replace(/\n|\r/g, ""),
-          shortDescription: $('#job-content').text()
+          shortDescription: $('#job-content').text(),
+          detailURI: $('#job-share').attr('data-fullpath')
         } as Job
       })
     )
@@ -95,7 +96,7 @@ export class Jobs {
   //
   // }
 
-  public createJob(job: Job) {
-    from(axios.post(this.endPoint))
+  public createJob(job: Job): Observable<AxiosResponse> {
+    return from(axios.post(this.endPoint, job));
   }
 }
